@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Movie = require('../models/Movie');
+const { isLoggedIn, isOwner } = require('../middleware/auth'); 
 
 // GET /movies, display all movies
 router.get('/', async (req, res) => {
@@ -19,23 +20,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /movies/new, show form to create new movie
-router.get('/new', (req, res) => {
+// GET /movies/new (restricted)
+router.get('/new', isLoggedIn, (req, res) => {
   res.render('movies/new', { 
     title: 'Add New Movie',
-    movie: {} // Empty movie object for the form
+    movie: {} 
   });
 });
 
-// POST /movies, create a new movie
-router.post('/', async (req, res) => {
+// POST /movies (restricted)
+router.post('/', isLoggedIn, async (req, res) => {
   try {
-    // Convert genres to array if it's a string
     if (typeof req.body.genres === 'string') {
       req.body.genres = [req.body.genres];
     }
-    
-    const movie = new Movie(req.body);
+    const movie = new Movie({ ...req.body, createdBy: req.session.userId });
     await movie.save();
     res.redirect('/movies');
   } catch (error) {
@@ -71,8 +70,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// GET /movies/:id/edit, show edit form
-router.get('/:id/edit', async (req, res) => {
+// GET /movies/:id/edit (restricted to owner)
+router.get('/:id/edit', isLoggedIn, isOwner, async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) {
@@ -94,14 +93,12 @@ router.get('/:id/edit', async (req, res) => {
   }
 });
 
-// PUT /movies/:id, update the movie
-router.put('/:id', async (req, res) => {
+// PUT /movies/:id (restricted to owner)
+router.put('/:id', isLoggedIn, isOwner, async (req, res) => {
   try {
-    // Convert genres to array if it's a string
     if (typeof req.body.genres === 'string') {
       req.body.genres = [req.body.genres];
     }
-    
     await Movie.findByIdAndUpdate(req.params.id, req.body);
     res.redirect(`/movies/${req.params.id}`);
   } catch (error) {
@@ -114,8 +111,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE /movies/:id, delete movie
-router.delete('/:id', async (req, res) => {
+// DELETE /movies/:id (restricted to owner)
+router.delete('/:id', isLoggedIn, isOwner, async (req, res) => {
   try {
     await Movie.findByIdAndDelete(req.params.id);
     res.redirect('/movies');
