@@ -37,7 +37,8 @@ const movieSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Duration is needed'],
     min: [1, 'Duration needs to be at least 1 minute']
-  }
+  },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
 }, {
   timestamps: true // adds createdAt and updatedAt fields
 });
