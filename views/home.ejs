@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/united/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .hero-box {
+            margin-top: 120px;
+            padding: 50px;
+            background-color: #fff3cd; /* soft warm yellow */
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .hero-title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .hero-sub {
+            font-size: 1.2rem;
+            margin-bottom: 35px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+        <div class="hero-box mx-auto col-md-8 col-lg-6">
+
+            <h1 class="hero-title">Welcome to MovieDB 🎬</h1>
+
+            <p class="hero-sub">
+                Your simple movie manager - browse, add, edit, and explore films.
+            </p>
+
+            <a href="/movies" class="btn btn-primary btn-lg">
+                Enter Movie App →
+            </a>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
